@@ -1,50 +1,30 @@
-// contentScript.js
+import checkKeyboardAccessibility from './operable/keyboardAccessible/index';
+import checkLanguageAttribute from './understandable/3.1.1/index';
+import checkAllDirectives from './checkAllDirectives';
 
-// Função para capturar o DOM da página
 const getPageDOM = () => {
   return document.documentElement.outerHTML;
 };
 
-// Função para verificar a acessibilidade por teclado
-const checkKeyboardAccessibility = () => {
-  const focusableElements = [
-    'a[href]',
-    'button',
-    'input',
-    'select',
-    'textarea',
-    '[tabindex]:not([tabindex="-1"])'
-  ];
-  
-  const elements = document.querySelectorAll(focusableElements.join(','));
-  
-  const results = {
-    allFocusableElements: [],
-    accessibleByKeyboard: []
-  };
-
-  elements.forEach(element => {
-    const isTabbable = element.tabIndex >= 0;
-    results.allFocusableElements.push({
-      tag: element.tagName.toLowerCase(),
-      id: element.id,
-      tabindex: element.tabIndex,
-      tabbable: isTabbable
-    });
-
-    if (isTabbable) {
-      results.accessibleByKeyboard.push(element);
-    }
-  });
-
-  return results;
+const handleCheckDirective = async (directive) => {
+  switch (directive) {
+    case '2.1.1':
+      return await checkKeyboardAccessibility();
+    case '3.1.1':
+      return await checkLanguageAttribute();
+    default:
+      return { result: 'Diretriz não reconhecida' };
+  }
 };
 
-// Listener para mensagens do popup ou background
 window.chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'getDOM') {
     sendResponse({ dom: getPageDOM() });
-  } else if (message.action === 'checkKeyboardAccessibility') {
-    sendResponse(checkKeyboardAccessibility());
+  } else if (message.action === 'checkDirective') {
+    handleCheckDirective(message.directive).then(sendResponse);
+  } else if (message.action === 'checkAllDirectives') {
+    checkAllDirectives().then(sendResponse);
   }
+
+  return true; // Indica que a resposta será enviada de forma assíncrona
 });

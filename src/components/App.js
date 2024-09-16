@@ -8,20 +8,24 @@ import { DIRECTIVES } from './../const/config';
 
 const App = () => {
   const [selectedDirective, setSelectedDirective] = useState('');
-  const [selectAll, setSelectAll] = useState(true);
+  const [selectAll, setSelectAll] = useState(false);
 
   const handleVerify = () => {
-    if (selectAll) {
-      console.log('Verificando todas as diretrizes');
+    if (window.chrome && window.chrome.runtime && window.chrome.runtime.sendMessage) {
+      window.chrome.runtime.sendMessage(
+        { action: 'checkKeyboardAccessibility' },
+        (response) => {
+          console.log('Response:', response);
+        }
+      );
     } else {
-      console.log('Diretriz selecionada:', selectedDirective);
+      console.error('Chrome API is not available. Make sure you are running this in a Chrome extension context.');
     }
   };
-
   const handleCheckboxChange = (e) => {
     setSelectAll(e.target.checked);
     if (e.target.checked) {
-      setSelectedDirective('');
+      setSelectedDirective(''); 
     }
   };
 

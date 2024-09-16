@@ -1,0 +1,14 @@
+
+.checkbox-group {
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+}
+
+.checkbox-input {
+  margin-right: 0.5rem;
+}
+
+.checkbox-label {
+  font-weight: normal;
+}

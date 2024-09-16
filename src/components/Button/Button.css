@@ -1,0 +1,26 @@
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+  border-radius: 4px;
+  width: 50%;
+  padding: 10px;
+  color: #fff;
+  font-size: 1em;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  margin: 0 auto;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.btn-primary:active {
+  top: 1px;
+}

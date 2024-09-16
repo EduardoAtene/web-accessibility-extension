@@ -1,0 +1,18 @@
+.custom-header {
+  color: #343a40;
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.custom-header.small {
+  font-size: 20px;
+}
+
+.custom-header.medium {
+  font-size: 24px;
+}
+
+.custom-header.large {
+  font-size: 30px;
+}

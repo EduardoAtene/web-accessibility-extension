@@ -1,46 +1,27 @@
-const capturePageState = () => {
-  return {
-    url: window.location.href,
-    innerHTML: document.documentElement.innerHTML
-  };
+import checkLanguageAttribute from '../scripts/understandable/language/index';  
+import checkKeyboardAccessibility from '../scripts/operable/keyboardAccessible/index';  
+
+chrome.runtime.sendMessage({ action: 'ping' }, (response) => {
+  console.log('Resposta do background script:', response.result);
+});
+
+const getPageDOM = () => {
+  return document.documentElement.outerHTML;
 };
 
-const checkFocusChange = () => {
-  const focusableElements = [
-    'a[href]',
-    'button',
-    'input',
-    'select',
-    'textarea',
-    '[tabindex]:not([tabindex="-1"])'
-  ];
+const languageCheckResult = checkLanguageAttribute();
+const keyboardAccessibility = checkKeyboardAccessibility();
 
-  const elements = document.querySelectorAll(focusableElements.join(','));
+chrome.runtime.sendMessage({ action: 'getDOM', dom: getPageDOM() }, (response) => {
+  console.log('Resposta do background script:', response);
+});
 
-  let previousState = capturePageState();
+chrome.runtime.sendMessage({ action: 'checkKeyboardAccessibility', result: keyboardAccessibility }, (response) => {
+  console.log('Resposta do background script:', response);
+});
 
-  elements.forEach(element => {
-    element.addEventListener('focus', () => {
-      setTimeout(() => {
-        const currentState = capturePageState();
-        if (previousState.url !== currentState.url || previousState.innerHTML !== currentState.innerHTML) {
-          console.warn('Mudança de contexto detectada ao focar em:', element);
-        }
-      }, 100); // Atraso para capturar mudanças após o foco
-    });
-  });
-};
+chrome.runtime.sendMessage({ action: 'checkLanguageAttribute', result: languageCheckResult }, (response) => {
+  console.log('Resposta do background script:', response);
+});
 
-const checkLanguageAttribute = () => {
-  const htmlElement = document.documentElement;
-  const langAttribute = htmlElement.getAttribute('lang');
-  
-  if (langAttribute) {
-    console.log('Idioma da página:', langAttribute);
-  } else {
-    console.warn('O atributo "lang" não está definido no elemento <html>.');
-  }
-};
 
-checkFocusChange();
-checkLanguageAttribute();

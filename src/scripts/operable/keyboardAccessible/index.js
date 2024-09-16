@@ -40,6 +40,7 @@ const checkKeyboardAccessibility = () => {
     }
   });
 
+  console.log(results);
   return results;
 };
 

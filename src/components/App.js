@@ -11,21 +11,34 @@ const App = () => {
   const [selectAll, setSelectAll] = useState(false);
 
   const handleVerify = () => {
-    if (window.chrome && window.chrome.runtime && window.chrome.runtime.sendMessage) {
-      window.chrome.runtime.sendMessage(
-        { action: 'checkKeyboardAccessibility' },
-        (response) => {
-          console.log('Response:', response);
-        }
-      );
-    } else {
-      console.error('Chrome API is not available. Make sure you are running this in a Chrome extension context.');
-    }
+    const action = selectAll ? 'checkAllAccessibility' : 'checkSpecificAccessibility';
+    const directiveToCheck = selectAll ? null : selectedDirective;
+
+    // Obtém a aba ativa antes de enviar a mensagem
+    debugger
+
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      console.log('Tabs:', tabs);
+      debugger
+      const currentTab = tabs[0];
+      if (currentTab) {
+        // Envia a mensagem com o ID da aba e os dados relevantes
+        window.chrome.runtime.sendMessage(
+          { action, directive: directiveToCheck, tabId: currentTab.id },
+          (response) => {
+            console.log('ResponsAQQQ:', response);
+          }
+        );
+      } else {
+        console.error('Nenhuma aba ativa encontrada.');
+      }
+    });
   };
+
   const handleCheckboxChange = (e) => {
     setSelectAll(e.target.checked);
     if (e.target.checked) {
-      setSelectedDirective(''); 
+      setSelectedDirective(''); // Limpa a seleção de diretrizes se "Selecionar Todas" estiver marcado
     }
   };
 
@@ -40,7 +53,7 @@ const App = () => {
       />
       {!selectAll && (
         <Select
-          id="directiveSelect"
+          id="getDOM"
           value={selectedDirective}
           onChange={(e) => setSelectedDirective(e.target.value)}
           options={DIRECTIVES}

@@ -3,20 +3,16 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from './Button/Button';
 import Header from './Header/Header';
 const App = () => {
-  const [selectedDirective, setSelectedDirective] = useState('');
-  const [selectAll, setSelectAll] = useState(false);
   const [results, setResults] = useState(null);
   const [openIndex, setOpenIndex] = useState(null); 
 
   const handleVerify = () => {
-    const action = selectAll ? 'checkAllAccessibility' : 'checkSpecificAccessibility';
-    const directiveToCheck = selectAll ? null : selectedDirective;
-
+    const action =  'checkAllAccessibility';
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
       const currentTab = tabs[0];
       if (currentTab) {
         chrome.runtime.sendMessage(
-          { action, directive: directiveToCheck, tabId: currentTab.id },
+          { action, tabId: currentTab.id },
           (response) => {
             console.log('Resposta do background:', response);
           }
@@ -55,6 +51,7 @@ const App = () => {
       {results && (
         <div className="accordion" id="accordionExample">
           <h3>Resultados da Análise:</h3>
+          <h3>Quantidade Violações:{results.length} </h3>
           {results.map((result, index) => (
             <div className="accordion-item" key={index}>
               <h2 className="accordion-header" id={`heading${index}`}>
@@ -75,7 +72,6 @@ const App = () => {
                 data-bs-parent="#accordionExample"
               >
                 <div className="accordion-body">
-                  <p><strong>ID:</strong> {result.id}</p>
                   <p><strong>Impacto:</strong> {result.impact}</p>
                   <p><strong>Descrição:</strong> {result.description}</p>
                   <p><strong>Tags:</strong></p>

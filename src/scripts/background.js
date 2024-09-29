@@ -19,9 +19,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       }
     );
 
-    return true; // Indica que a resposta será enviada de forma assíncrona
+    return true;
+  } else if (message.status === "success"){
+    return true
   } else {
-    console.error('Ação não reconhecida:', message.action);
     sendResponse({ status: 'error', message: 'Ação não reconhecida.' });
     return true;
   }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Select from './Select/Select';
 import Button from './Button/Button';
@@ -9,24 +9,19 @@ import { DIRECTIVES } from './../const/config';
 const App = () => {
   const [selectedDirective, setSelectedDirective] = useState('');
   const [selectAll, setSelectAll] = useState(false);
+  const [results, setResults] = useState(null); // Para armazenar os resultados
 
   const handleVerify = () => {
     const action = selectAll ? 'checkAllAccessibility' : 'checkSpecificAccessibility';
     const directiveToCheck = selectAll ? null : selectedDirective;
 
-    // Obtém a aba ativa antes de enviar a mensagem
-    debugger
-
     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      console.log('Tabs:', tabs);
-      debugger
       const currentTab = tabs[0];
       if (currentTab) {
-        // Envia a mensagem com o ID da aba e os dados relevantes
-        window.chrome.runtime.sendMessage(
+        chrome.runtime.sendMessage(
           { action, directive: directiveToCheck, tabId: currentTab.id },
           (response) => {
-            console.log('ResponsAQQQ:', response);
+            console.log('Resposta do background:', response);
           }
         );
       } else {
@@ -34,6 +29,24 @@ const App = () => {
       }
     });
   };
+
+  useEffect(() => {
+    const handleMessage = (message) => {
+      if (message.status === 'success') {
+        setResults(message.results); 
+        console.log('Resultados da análise:', message.results);
+      } else if (message.status === 'error') {
+        console.error('Erro:', message.message);
+      }
+    };
+
+    chrome.runtime.onMessage.addListener(handleMessage);
+
+    // Limpa o listener ao desmontar o componente
+    return () => {
+      chrome.runtime.onMessage.removeListener(handleMessage);
+    };
+  }, []);
 
   const handleCheckboxChange = (e) => {
     setSelectAll(e.target.checked);
@@ -45,22 +58,8 @@ const App = () => {
   return (
     <div className="container">
       <Header size="medium">Verificador de Diretrizes de Acessibilidade</Header>
-      <Checkbox
-        id="selectAll"
-        checked={selectAll}
-        onChange={handleCheckboxChange}
-        label="Verificar Todas Diretrizes"
-      />
-      {!selectAll && (
-        <Select
-          id="getDOM"
-          value={selectedDirective}
-          onChange={(e) => setSelectedDirective(e.target.value)}
-          options={DIRECTIVES}
-          label="Selecione uma Diretriz:"
-        />
-      )}
       <Button onClick={handleVerify}>Verificar</Button>
+      
     </div>
   );
 };

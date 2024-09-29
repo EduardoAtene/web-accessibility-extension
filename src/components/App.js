@@ -33,8 +33,10 @@ const App = () => {
   useEffect(() => {
     const handleMessage = (message) => {
       if (message.status === 'success') {
-        setResults(message.results); 
-        console.log('Resultados da análise:', message.results);
+        setResults(message.results.violations);
+        debugger 
+        
+        console.log('Resultados da análise:', message.results.violations);
       } else if (message.status === 'error') {
         console.error('Erro:', message.message);
       }
@@ -59,7 +61,41 @@ const App = () => {
     <div className="container">
       <Header size="medium">Verificador de Diretrizes de Acessibilidade</Header>
       <Button onClick={handleVerify}>Verificar</Button>
-      
+      {results && (
+        <div className="accordion" id="accordionExample">
+          <h3>Resultados da Análise:</h3>
+          {results.map((result, index) => (
+            <div className="accordion-item" key={index}>
+              <h2 className="accordion-header" id={`heading${index}`}>
+                <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target={`#collapse${index}`} aria-expanded={index === 0 ? "true" : "false"} aria-controls={`collapse${index}`}>
+                  {result.description} (Impacto: {result.impact})
+                </button>
+              </h2>
+              <div id={`collapse${index}`} className={`accordion-collapse collapse ${index === 0 ? "show" : ""}`} aria-labelledby={`heading${index}`} data-bs-parent="#accordionExample">
+                <div className="accordion-body">
+                  <p><strong>ID:</strong> {result.id}</p>
+                  <p><strong>Impacto:</strong> {result.impact}</p>
+                  <p><strong>Descrição:</strong> {result.description}</p>
+                  <p><strong>Ajuda:</strong> <a href={result.helpUrl} target="_blank" rel="noopener noreferrer">{result.help}</a></p>
+                  <strong>Resumo de Falha:</strong>
+                  <ul>
+                    {result.nodes.map((node, nodeIndex) => (
+                      <li key={nodeIndex}>
+                        <p><strong>Impacto:</strong> {node.impact}</p>
+                        <p><strong>Mensagem:</strong> {node.any.length > 0 ? node.any[0].message : "N/A"}</p>
+                        <p><strong>HTML:</strong> <code>{node.html}</code></p>
+                        <p><strong>Target:</strong> {node.target.join(", ")}</p>
+                        <p><strong>Resumo de Falha:</strong> {node.failureSummary}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
     </div>
   );
 };

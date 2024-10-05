@@ -5,7 +5,7 @@ body {
   font-size: 1.0em;
   margin: 0;
   display: flex;
-  background-color: #f8f9fa;
+  background-color: #000000;
 }
 
 .root {
@@ -21,19 +21,28 @@ body {
 
 h1 {
   font-size: 24px;
-  color: #343a40;
+  color: #ffffff;
+  text-align: center;
+}
+
+h3{
+  font-size: 24px;
+  color: #ffffff;
   text-align: center;
 }
 
 .form-group label {
   font-weight: bold;
-  color: #495057;
+  color: #ffffff;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
+.textLoading{
+  color: #ffffff;
+}
 @media (max-width: 600px) {
   .root {
     padding: 20px;
@@ -43,4 +52,6 @@ code {
   h1 {
     font-size: 20px;
   }
+
+
 }

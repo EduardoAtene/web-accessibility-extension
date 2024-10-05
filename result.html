@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resultados da Análise</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Resultados da Análise</h1>
+  <div id="results">Carregando resultados...</div>
+
+  <script>
+  chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  console.log('Mensagem recebida no background.js:', message);
+
+  if (message.accessibilityResults) {
+    console.log('Resultados da análise recebidos:', message.accessibilityResults);
+    chrome.storage.local.set({ accessibilityResults: message.accessibilityResults }, () => {
+      console.log('Resultados armazenados com sucesso.');
+      sendResponse({ status: 'received' });
+    });
+
+   
+    return true;
+  }
+
+  if (message.openResultsPage) {
+    
+    chrome.tabs.create({ url: chrome.runtime.getURL("results.html") }, (tab) => {
+      console.log('Página de resultados aberta:', tab);
+      sendResponse({ status: 'page_opened' });
+    });
+    return true;
+  }
+});
+  </script>
+</body>
+
+</html>

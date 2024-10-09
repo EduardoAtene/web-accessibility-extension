@@ -8,6 +8,11 @@ body {
   background-color: #000000;
 }
 
+.bg-serious {  
+  background-color: #fc8804;
+  color: #ffffff;
+}
+
 .root {
   padding: 30px;
   max-width: 500px;

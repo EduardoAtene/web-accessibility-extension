@@ -7,17 +7,25 @@ import { DIRECTIVES } from '../const/config';
 const App = () => {
   const [results, setResults] = useState(null);
   const [openIndex, setOpenIndex] = useState(null);
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [filter, setFilter] = useState('all'); // Novo estado para filtro
 
   const getDirectiveLinkFromTag = (tags) => {
     const directiveTag = tags.find((tag) => DIRECTIVES.some((directive) => directive.value === tag));
   
     if (directiveTag) {
       const directive = DIRECTIVES.find((d) => d.value === directiveTag);
-      return `https://www.w3.org/TR/WCAG21/${directive.tag}`;
+      
+      return {
+        url: `https://www.w3.org/TR/WCAG21/${directive.tag}`,
+        label: directive.label,
+      };
     }
   
-    return 'https://www.w3.org/TR/WCAG21/';
+    return {
+      url: 'https://www.w3.org/TR/WCAG21/',
+      label: 'Best Practice', 
+    };
   };
 
   const handleVerify = () => {
@@ -91,10 +99,31 @@ const App = () => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
+  // Filtrando resultados com base no impacto selecionado
+  const filteredResults = filter === 'all' 
+    ? results 
+    : results.filter(result => result.impact === filter);
+
   return (
     <div className="container">
       <Header size="medium">Verificador de Diretrizes de Acessibilidade</Header>
       <Button onClick={handleVerify}>Verificar</Button>
+
+      <div className="mt-3 mb-5">
+        <label htmlFor="impactFilter">Filtrar por Impacto:</label>
+        <select 
+          id="impactFilter" 
+          value={filter} 
+          onChange={(e) => setFilter(e.target.value)}
+          className="form-select w-50"
+        >
+          <option value="all">Todos</option>
+          <option value="critical">Crítico</option>
+          <option value="serious">Sério</option>
+          <option value="moderate">Moderado</option>
+          <option value="minor">Menor</option>
+        </select>
+      </div>
 
       {loading && (
         <div className="text-center mt-4">
@@ -108,49 +137,53 @@ const App = () => {
       {!loading && results && (
         <div className="accordion" id="accordionExample">
           <h3>Resultados da Análise</h3>
-          <h3>Violações: {results.length} </h3>
-          {results
-            .sort((a, b) => getPriorityValue(a.impact) - getPriorityValue(b.impact)) 
-            .map((result, index) => (
-              <div className="accordion-item" key={index}>
-                <h2 className="accordion-header" id={`heading${index}`}>
-                  <button
-                    className={`accordion-button ${openIndex === index ? '' : 'collapsed'} ${getColor(result.impact)}`}
-                    type="button"
-                    onClick={() => toggleAccordion(index)}
-                    aria-expanded={openIndex === index}
-                    aria-controls={`collapse${index}`}
+          <h3>Violações: {filteredResults.length} </h3>
+          {filteredResults
+            .sort((a, b) => getPriorityValue(a.impact) - getPriorityValue(b.impact))
+            .map((result, index) => {
+              const directive = getDirectiveLinkFromTag(result.tags); // Mova esta linha para fora do JSX
+
+              return (
+                <div className="accordion-item" key={index}>
+                  <h2 className="accordion-header" id={`heading${index}`}>
+                    <button
+                      className={`accordion-button ${openIndex === index ? '' : 'collapsed'} ${getColor(result.impact)}`}
+                      type="button"
+                      onClick={() => toggleAccordion(index)}
+                      aria-expanded={openIndex === index}
+                      aria-controls={`collapse${index}`}
+                    >
+                      {result.description} (Impacto: {result.impact})
+                    </button>
+                  </h2>
+                  <div
+                    id={`collapse${index}`}
+                    className={`accordion-collapse collapse ${openIndex === index ? 'show' : ''}`}
+                    aria-labelledby={`heading${index}`}
+                    data-bs-parent="#accordionExample"
                   >
-                    {result.description} (Impacto: {result.impact})
-                  </button>
-                </h2>
-                <div
-                  id={`collapse${index}`}
-                  className={`accordion-collapse collapse ${openIndex === index ? 'show' : ''}`}
-                  aria-labelledby={`heading${index}`}
-                  data-bs-parent="#accordionExample"
-                >
-                  <div className="accordion-body">
-                    <p><strong>Impacto:</strong> {result.impact}</p>
-                    <hr></hr>
-                    <p><strong>Descrição:</strong> {result.description}</p>
-                    <hr></hr>
-                    <p><strong>Diretriz:</strong> 
-                      <a href={getDirectiveLinkFromTag(result.tags)} target="_blank" rel="noopener noreferrer">
-                        Ver diretriz
-                      </a>
-                    </p>
-                    <hr></hr>
-                    <p><strong>Tags:</strong></p>
-                    <ul>
-                      {result.tags.map((tag, tagIndex) => (
-                        <li key={tagIndex}>{tag}</li>
-                      ))}
-                    </ul>
+                    <div className="accordion-body">
+                      <p><strong>Impacto:</strong> {result.impact}</p>
+                      <hr />
+                      <p><strong>Descrição:</strong> {result.description}</p>
+                      <hr />
+                      <p><strong>Diretriz:</strong> 
+                        <a href={directive.url} target="_blank" rel="noopener noreferrer">
+                          {directive.label}
+                        </a>
+                      </p>
+                      <hr />
+                      <p><strong>Tags:</strong></p>
+                      <ul>
+                        {result.tags.map((tag, tagIndex) => (
+                          <li key={tagIndex}>{tag}</li>
+                        ))}
+                      </ul>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       )}
     </div>

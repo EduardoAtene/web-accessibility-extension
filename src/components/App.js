@@ -134,7 +134,7 @@ const App = () => {
         </div>
       )}
 
-      {!loading && results && (
+      {/* {!loading && results && (
         <div className="accordion" id="accordionExample">
           <h3>Resultados da Análise</h3>
           <h3>Violações: {filteredResults.length} </h3>
@@ -185,7 +185,7 @@ const App = () => {
               );
             })}
         </div>
-      )}
+      )} */}
     </div>
   );
 };

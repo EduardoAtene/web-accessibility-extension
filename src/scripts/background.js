@@ -70,8 +70,8 @@ function runAxeAnalysis() {
         navigateToElement(0);
       }
 
-      createMinimizeButton(document.querySelector('.custom-tooltip'));
-      createMinimizeButton(document.getElementById('progress-box'));
+      // createMinimizeButton(document.querySelector('.custom-tooltip'));
+      // createMinimizeButton(document.getElementById('progress-box'));
     
     }
   });
@@ -131,7 +131,7 @@ function runAxeAnalysis() {
   }
 
   function createMinimizeButton(parentElement) {
-    const button = document.createElement('button');
+    const button = document.createElement('span');
     button.classList.add('minimize-button');
     button.innerHTML = '−';
     button.addEventListener('click', () => toggleMinimize(parentElement));
@@ -151,11 +151,11 @@ function runAxeAnalysis() {
     progressBox.innerHTML = `
       <h3>Problemas de Acessibilidade</h3>
       <h4>Quantidade Diretrizes Afetadas: ${lengthTotal}</h4>
-      <h4>Quantidade Total: ${elements.length}</h4>
+      <h4>Elementos Total: ${elements.length}</h4>
       <ul id="violation-list" style="list-style-type: none; padding: 0;">
         ${elements.map((item, index) => `
           <li data-index="${index}" style="cursor: pointer; padding: 5px 0; display: flex; align-items: center;">
-            <button class="impact-button" style="
+            <span class="impact-button" style="
               background-color: ${impactColors[item.violation.impact]}; 
               color: white; 
               border: none; 
@@ -165,7 +165,7 @@ function runAxeAnalysis() {
               margin-right: 10px; 
               font-weight: bold;
             ">
-            </button>
+            </span>
             ${item.violation.help}
           </li>
         `).join('')}
@@ -263,7 +263,7 @@ function runAxeAnalysis() {
       <h3>${violation.help}</h3>
       <p><strong>Impacto:</strong> <span style="color: ${impactColors[violation.impact]};">${violation.impact.toUpperCase()}</span></p>
       <p><strong>Descrição:</strong> ${violation.description}</p>
-      <p><strong>Elemento:</strong> <br><pre><code>${escapeHtml(node.html)}</code></pre></p>
+      <p><strong>Elemento:</strong> <br><pre class="reset-pre"><code class="language-html">${escapeHtml(node.html)}</code></pre></p>
       <p><strong>Diretriz:</strong> ${directiveLink}</p>
       <p><strong>Como corrigir:</strong> ${node.failureSummary}</p>
       <p><a href="${violation.helpUrl}" target="_blank">Mais informações</a></p>

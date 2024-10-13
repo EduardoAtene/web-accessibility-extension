@@ -142,6 +142,7 @@ function runAxeAnalysis() {
     const progressBox = document.getElementById('progress-box');
     progressBox.innerHTML = `
       <h3>Problemas de Acessibilidade</h3>
+      <h4>Quantidade Total: ${elements.length}</h4>
       <ul id="violation-list" style="list-style-type: none; padding: 0;">
         ${elements.map((item, index) => `
           <li data-index="${index}" style="cursor: pointer; padding: 5px 0;">

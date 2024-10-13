@@ -145,7 +145,7 @@ function runAxeAnalysis() {
       critical: 'red',
       serious: 'orange',
       moderate: 'yellow',
-      minor: 'blue',
+      minor: 'green',
     };
   
     progressBox.innerHTML = `

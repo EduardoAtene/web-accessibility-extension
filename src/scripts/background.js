@@ -54,16 +54,13 @@ function runAxeAnalysis() {
         violation.nodes.forEach((node) => {
           const target = node.target[0];
           const element = document.querySelector(target);
-          
-          if (element && element.tagName.toLowerCase() !== 'html') {
-            const tooltipContent = createTooltipContent(violation, node);
+          const tooltipContent = createTooltipContent(violation, node);
 
             highlightedElements.push({
               element: element,
               tooltipContent: tooltipContent,
               violation: violation
             });
-          }
         });
       });
 
@@ -72,6 +69,10 @@ function runAxeAnalysis() {
       if (highlightedElements.length > 0) {
         navigateToElement(0);
       }
+
+      createMinimizeButton(document.querySelector('.custom-tooltip'));
+      createMinimizeButton(document.getElementById('progress-box'));
+    
     }
   });
 
@@ -89,9 +90,12 @@ function runAxeAnalysis() {
     `;
 
     const prevButton = createButton('Anterior', () => navigateToElement(currentElementIndex - 1));
+    const minimizeButton = createButton('−', () => toggleMinimizeElements(minimizeButton));
     const nextButton = createButton('Próximo', () => navigateToElement(currentElementIndex + 1));
 
     controls.appendChild(prevButton);
+    controls.appendChild(minimizeButton);
+    
     controls.appendChild(nextButton);
     document.body.appendChild(controls);
   }
@@ -116,6 +120,24 @@ function runAxeAnalysis() {
     document.body.appendChild(progressBox);
   }
 
+  function toggleMinimize(element) {
+    element.classList.toggle('minimized');
+    const button = element.querySelector('.minimize-button');
+    if (element.classList.contains('minimized')) {
+      button.innerHTML = '+';
+    } else {
+      button.innerHTML = '−';
+    }
+  }
+
+  function createMinimizeButton(parentElement) {
+    const button = document.createElement('button');
+    button.classList.add('minimize-button');
+    button.innerHTML = '−';
+    button.addEventListener('click', () => toggleMinimize(parentElement));
+    parentElement.appendChild(button);
+  }
+  
   function updateProgressBox(elements) {
     const progressBox = document.getElementById('progress-box');
     progressBox.innerHTML = `
@@ -190,6 +212,22 @@ function runAxeAnalysis() {
     });
   }
 
+  function toggleMinimizeElements(button) {
+    const elementsToMinimize = document.querySelectorAll('.custom-tooltip, #progress-box');
+  
+    elementsToMinimize.forEach((element) => {
+      element.classList.toggle('minimized');
+    });
+  
+    if (button.textContent === '−') {
+      button.textContent = '+';
+      button.title = 'Maximizar';
+    } else {
+      button.textContent = '−';
+      button.title = 'Minimizar';
+    }
+  }
+
   function createTooltipContent(violation, node) {
     const impactColors = {
       minor: '#4CAF50',
@@ -204,8 +242,7 @@ function runAxeAnalysis() {
       <h3>${violation.help}</h3>
       <p><strong>Impacto:</strong> <span style="color: ${impactColors[violation.impact]};">${violation.impact.toUpperCase()}</span></p>
       <p><strong>Descrição:</strong> ${violation.description}</p>
-      <p><strong>Elemento:</strong> <br>${node.html}<br></p>
-      <p><strong>Elemento Html:</strong> <br>${escapeHtml(node.html)}</p>
+      <p><strong>Elemento:</strong> <br><pre><code>${escapeHtml(node.html)}</code></pre></p>
       <p><strong>Diretriz:</strong> ${directiveLink}</p>
       <p><strong>Como corrigir:</strong> ${node.failureSummary}</p>
       <p><a href="${violation.helpUrl}" target="_blank">Mais informações</a></p>
@@ -255,8 +292,8 @@ function runAxeAnalysis() {
       top = window.innerHeight - tooltipRect.height - 10;
     }
     
-    tooltip.style.left = `${left}px`;
-    tooltip.style.top = `${top}px`;
+    // tooltip.style.left = `${left}px`; // Isso aqui navega até o lugar. Deixar
+    // tooltip.style.top = `${top}px`; // Isso aqui navega até o lugar. Deixar
     tooltip.style.display = 'block';
   }
 

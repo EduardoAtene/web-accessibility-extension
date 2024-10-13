@@ -1,4 +1,9 @@
-.custom-tooltip {
+.draggable {
+  cursor: move;
+  user-select: none;
+}
+
+.custom-tooltip, #progress-box {
   background-color: rgba(255, 255, 255, 0.95);
   color: #333;
   padding: 20px;
@@ -11,31 +16,63 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   line-height: 1.6;
   border: 1px solid #e0e0e0;
+  transition: all 0.3s ease;
 }
 
-.custom-tooltip h3 {
-  margin-top: 0;
-  color: #007bff;
+.custom-tooltip {
+  bottom: 20px;
+  left: 20px;
+}
+
+#progress-box {
+  top: 20px;
+  right: 20px;
+}
+
+.minimized {
+  width: 40px !important;
+  height: 40px !important;
+  border-radius: 50%;
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+}
+
+.minimized * {
+  display: none;
+}
+
+.minimized::after {
+  content: "+";
+  font-size: 24px;
+}
+
+.minimize-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
   font-size: 18px;
-  border-bottom: 1px solid #e0e0e0;
-  padding-bottom: 10px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background-color 0.3s ease;
 }
 
-.custom-tooltip p {
-  margin-bottom: 10px;
-}
-
-.custom-tooltip strong {
-  color: #333;
-}
-
-.custom-tooltip a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-.custom-tooltip a:hover {
-  text-decoration: underline;
+.minimize-button:hover {
+  background-color: #0056b3;
 }
 
 .highlighted {
@@ -45,19 +82,27 @@
   box-shadow: 0 0 10px 2px rgba(0, 123, 255, 0.3);
 }
 
-#progress-box {
-  font-family: Arial, sans-serif;
+#navigation-controls {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1003;
+  display: flex;
+  gap: 10px;
 }
 
-#progress-box h3 {
-  margin-top: 0;
-  color: #007bff;
-}
-
-#violation-list li {
+#navigation-controls button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-#violation-list li:hover {
-  background-color: #f0f0f0;
+#navigation-controls button:hover {
+  background-color: #0056b3;
 }

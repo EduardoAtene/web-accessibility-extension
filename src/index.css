@@ -46,7 +46,7 @@ code {
 }
 
 .textLoading{
-  color: #ffffff;
+  color: #000000;
 }
 @media (max-width: 600px) {
   .root {

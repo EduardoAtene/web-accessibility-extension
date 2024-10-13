@@ -106,3 +106,19 @@
 #navigation-controls button:hover {
   background-color: #0056b3;
 }
+
+.impact-button {
+  border: none;
+  border-radius: 50%;
+  display: inline-block;
+  padding: 5px; /* Ajuste o padding conforme necessário */
+  margin-right: 10px; /* Espaço à direita do botão */
+  color: white;
+  font-weight: bold;
+  transition: background-color 0.3s; /* Efeito de transição suave para a cor */
+}
+
+/* Exemplo de hover para melhorar a interação do usuário */
+.impact-button:hover {
+  opacity: 0.8; /* Efeito ao passar o mouse */
+}

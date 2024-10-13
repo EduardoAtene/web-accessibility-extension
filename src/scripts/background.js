@@ -64,7 +64,7 @@ function runAxeAnalysis() {
         });
       });
 
-      updateProgressBox(highlightedElements);
+      updateProgressBox(highlightedElements,results.violations.length);
 
       if (highlightedElements.length > 0) {
         navigateToElement(0);
@@ -138,20 +138,40 @@ function runAxeAnalysis() {
     parentElement.appendChild(button);
   }
   
-  function updateProgressBox(elements) {
+  function updateProgressBox(elements, lengthTotal) {
     const progressBox = document.getElementById('progress-box');
+    
+    const impactColors = {
+      critical: 'red',
+      serious: 'orange',
+      moderate: 'yellow',
+      minor: 'blue',
+    };
+  
     progressBox.innerHTML = `
       <h3>Problemas de Acessibilidade</h3>
+      <h4>Quantidade Diretrizes Afetadas: ${lengthTotal}</h4>
       <h4>Quantidade Total: ${elements.length}</h4>
       <ul id="violation-list" style="list-style-type: none; padding: 0;">
         ${elements.map((item, index) => `
-          <li data-index="${index}" style="cursor: pointer; padding: 5px 0;">
+          <li data-index="${index}" style="cursor: pointer; padding: 5px 0; display: flex; align-items: center;">
+            <button class="impact-button" style="
+              background-color: ${impactColors[item.violation.impact]}; 
+              color: white; 
+              border: none; 
+              border-radius: 50%; 
+              display: inline-block; 
+              padding: 5px; 
+              margin-right: 10px; 
+              font-weight: bold;
+            ">
+            </button>
             ${item.violation.help}
           </li>
         `).join('')}
       </ul>
     `;
-
+  
     document.getElementById('violation-list').addEventListener('click', (e) => {
       if (e.target.tagName === 'LI') {
         const index = parseInt(e.target.getAttribute('data-index'));

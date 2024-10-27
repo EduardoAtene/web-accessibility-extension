@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+  <!-- Fundo transparente -->
+  <rect width="128" height="128" fill="none"/>
+  
+  <!-- Mão estilizada -->
+  <path d="M24 78 C24 68, 44 62, 64 62 C84 62, 104 68, 104 78 C104 88, 84 94, 64 94 C44 94, 24 88, 24 78" 
+        fill="#2196F3" />
+  
+  <!-- Símbolo de acessibilidade -->
+  <g transform="translate(64,50) scale(0.7)">
+    <!-- Círculo da cabeça -->
+    <circle cx="0" cy="-20" r="8" fill="#2196F3"/>
+    
+    <!-- Roda e pessoa -->
+    <path d="M-20 0 A20 20 0 1 1 20 0 A20 20 0 1 1 -20 0 M-8 -15 L8 -5 L8 10 L-8 0 Z" 
+          fill="#2196F3"/>
+  </g>
+</svg>

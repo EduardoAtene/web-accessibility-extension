@@ -142,46 +142,125 @@ function runAxeAnalysis() {
     const progressBox = document.getElementById('progress-box');
     
     const impactColors = {
-      critical: 'red',
-      serious: 'orange',
-      moderate: 'yellow',
-      minor: 'green',
+      critical: '#FFE7E7',
+      serious: '#FFF3E0',
+      moderate: '#FFF8E1',
+      minor: '#E8F5E9'
     };
+    
+    const impactTextColors = {
+      critical: '#D32F2F',
+      serious: '#EF6C00',
+      moderate: '#F9A825',
+      minor: '#2E7D32'
+    };
+
+    function getMostCriticalImpact(items) {
+      const impactOrder = ['critical', 'serious', 'moderate', 'minor'];
+      const impacts = items.map(item => item.violation.impact);
+      return impactOrder.find(impact => impacts.includes(impact)) || 'minor';
+    }
+    
+    const groupedByDirective = elements.reduce((acc, item) => {
+      const directive = item.violation.tags.find(tag => 
+        DIRECTIVES.some(d => d.value === tag)
+      ) || 'best-practice';
+      
+      if (!acc[directive]) {
+        acc[directive] = [];
+      }
+      acc[directive].push(item);
+      return acc;
+    }, {});
   
     progressBox.innerHTML = `
       <h3>Problemas de Acessibilidade</h3>
-      <h4>Quantidade Diretrizes Afetadas: ${lengthTotal}</h4>
+      <h4>Quantidade Diretrizes Afetadas: ${Object.keys(groupedByDirective).length}</h4>
       <h4>Elementos Total: ${elements.length}</h4>
       <ul id="violation-list" style="list-style-type: none; padding: 0;">
-        ${elements.map((item, index) => `
-          <li data-index="${index}" style="cursor: pointer; padding: 5px 0; display: flex; align-items: center;">
-            <span class="impact-button" style="
-              background-color: ${impactColors[item.violation.impact]}; 
-              color: white; 
-              border: none; 
-              border-radius: 50%; 
-              display: inline-block; 
-              padding: 5px; 
-              margin-right: 10px; 
-              font-weight: bold;
-            ">
-            </span>
-            ${item.violation.help}
-          </li>
-        `).join('')}
+        ${Object.entries(groupedByDirective).map(([directive, items]) => {
+          const directiveInfo = DIRECTIVES.find(d => d.value === directive) || 
+            { label: 'Best Practice', value: 'best-practice' };
+          
+          const mostCriticalImpact = getMostCriticalImpact(items);
+          return `
+            <li class="directive-group" style="margin-bottom: 10px;">
+              <div class="directive-header" style="
+                background-color: ${impactColors[mostCriticalImpact]};
+                color: ${impactTextColors[mostCriticalImpact]};
+                padding: 10px;
+                border-radius: 5px;
+                cursor: pointer;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-weight: 500;
+                border: 1px solid ${impactTextColors[mostCriticalImpact]}20;
+                transition: all 0.2s ease;
+              ">
+                <span>${directiveInfo.label} (${items.length})</span>
+                <span class="collapse-icon">▼</span>
+              </div>
+              <ul class="directive-items" style="
+                list-style-type: none;
+                padding-left: 20px;
+                margin-top: 5px;
+                display: none;
+              ">
+                ${items.map((item, index) => `
+                  <li data-index="${elements.indexOf(item)}" style="
+                    cursor: pointer;
+                    padding: 5px 0;
+                    display: flex;
+                    align-items: center;
+                  ">
+                    <span class="impact-button" style="
+                      background-color: ${impactTextColors[item.violation.impact]}; 
+                      width: 8px;
+                      height: 8px;
+                      border-radius: 50%; 
+                      display: inline-block; 
+                      margin-right: 10px;
+                    "></span>
+                    ${item.violation.help}
+                  </li>
+                `).join('')}
+              </ul>
+            </li>
+          `;
+        }).join('')}
       </ul>
     `;
   
-    document.getElementById('violation-list').addEventListener('click', (e) => {
-      if (e.target.tagName === 'LI') {
-        const index = parseInt(e.target.getAttribute('data-index'));
+    // Adiciona eventos de clique para collapse
+    const directiveHeaders = progressBox.querySelectorAll('.directive-header');
+    directiveHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        const items = header.nextElementSibling;
+        const icon = header.querySelector('.collapse-icon');
+        
+        if (items.style.display === 'none') {
+          items.style.display = 'block';
+          icon.textContent = '▼';
+        } else {
+          items.style.display = 'none';
+          icon.textContent = '▶';
+        }
+      });
+    });
+  
+    // Mantém a navegabilidade pelos elementos
+    document.querySelectorAll('.directive-items li').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const index = parseInt(e.currentTarget.getAttribute('data-index'));
         navigateToElement(index);
-      }
+      });
     });
   }
 
   function createButton(text, onClick) {
     const button = document.createElement('button');
+
     button.textContent = text;
     button.addEventListener('click', onClick);
     button.style.cssText = `

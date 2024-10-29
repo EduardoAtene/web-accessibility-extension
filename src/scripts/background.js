@@ -1,17 +1,13 @@
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   const tabId = message.tabId;
 
-  if (message.action === 'checkAllAccessibility' || message.action === 'checkSpecificAccessibility') {
-    console.log(`Ação recebida: ${message.action}, Tab ID: ${tabId}`);
-
+  if (message.action === 'checkAllAccessibility') {
     chrome.scripting.executeScript(
       {
         target: { tabId: tabId },
         files: ['scripts/axe.min.js']
       },
       () => {
-        console.log('axe.min.js injetado na aba:', tabId);
-
         chrome.scripting.executeScript({
           target: { tabId: tabId },
           func: runAxeAnalysis,
@@ -33,12 +29,10 @@ function runAxeAnalysis() {
 
   axe.run((err, results) => {
     if (err) {
-      console.error('Erro ao executar axe-core:', err);
       chrome.runtime.sendMessage({ status: 'error', message: 'Erro ao executar a análise de acessibilidade.' });
       return;
     }
 
-    console.log('Resultados da análise de acessibilidade:', results);
     chrome.runtime.sendMessage({ status: 'success', results: results });
 
     if (results.violations.length > 0) {
@@ -68,11 +62,7 @@ function runAxeAnalysis() {
 
       if (highlightedElements.length > 0) {
         navigateToElement(0);
-      }
-
-      // createMinimizeButton(document.querySelector('.custom-tooltip'));
-      // createMinimizeButton(document.getElementById('progress-box'));
-    
+      }    
     }
   });
 

@@ -5,16 +5,11 @@
   "description": "Extensão de acessibilidade",
   "author": "Pedro Mozany",
   "permissions": [
-    "activeTab",
-    "scripting",
-    "tabs"
+    "scripting"
   ],
   "background": {
     "service_worker": "scripts/background.js"
   },
-  "host_permissions": [
-    "<all_urls>"
-  ],
   "action": {
     "default_popup": "index.html",
     "default_icon": {
@@ -25,7 +20,6 @@
   },
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
       "js": ["scripts/content.js"],
       "css": ["scripts/style.css"]
     }

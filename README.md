@@ -1,70 +1,79 @@
-# Getting Started with Create React App
+# Inclusite
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+O **Inclusite** é uma extensão para navegadores que automatiza a verificação de acessibilidade em websites com base nas diretrizes WCAG. A extensão ajuda desenvolvedores a identificar problemas de acessibilidade em seus sites e sugere ajustes para melhorar a experiência de navegação para pessoas com deficiência.
 
-## Available Scripts
+## Funcionalidades
 
-In the project directory, you can run:
+- Verificação de conformidade com diretrizes WCAG 2.1.
+- Identificação de problemas de acessibilidade, como contraste de cores, navegação por teclado, e uso de ARIA.
+- Sugestões de correção para cada problema encontrado.
+- Relatórios detalhados sobre a acessibilidade de uma página web.
 
-### `npm start`
+## Pré-requisitos
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Antes de começar, certifique-se de ter o **Node.js** e o **npm** instalados na sua máquina. Você pode verificar se eles estão instalados com os seguintes comandos:
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```bash
+node -v npm -v
+```
 
-### `npm test`
+Se não tiver o **Node.js** instalado, acesse [https://nodejs.org](https://nodejs.org) para fazer o download e instalação.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Instalação
 
-### `npm run build`
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Usando a Chrome Web Store
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+A extensão **Inclusite** também está disponível para instalação diretamente pela [Chrome Web Store](https://chromewebstore.google.com/detail/inclusite/pijfafiohjkmmdecmimemikmjnfdjeck). Basta clicar no link e adicionar a extensão ao seu navegador.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Usando o código-fonte
 
-### `npm run eject`
+1. Clone o repositório para a sua máquina local:
+```bash
+https://github.com/EduardoAtene/web-accessibility-extension
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+2. Instale as dependências do projeto:
+```bash
+npm install
+```
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+3. Para construir a versão de produção da extensão, execute:
+```bash
+npm run build
+```
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+Esse comando criará uma pasta `build/` com os arquivos otimizados para produção.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Instalando a Extensão no Navegador
 
-## Learn More
+1. Abra o navegador e vá para a página de extensões:
+   - **Chrome**: `chrome://extensions/`
+   - **Edge**: `edge://extensions/`
+   
+2. Ative o modo de desenvolvedor (no canto superior direito).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. Clique em "Carregar sem compactação" ou "Load unpacked" e selecione a pasta `build/` gerada após o comando `npm run build`.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+Agora a extensão estará disponível no seu navegador, e você poderá usá-la para verificar a acessibilidade das páginas web.
 
-### Code Splitting
+## Contribuindo
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+Sinta-se à vontade para contribuir com melhorias, correções de bugs ou novas funcionalidades. Para isso, siga os passos abaixo:
 
-### Analyzing the Bundle Size
+1. Faça um fork deste repositório.
+2. Crie uma nova branch (`git checkout -b minha-nova-feature`).
+3. Faça as mudanças necessárias e commit (`git commit -am 'Adiciona nova feature'`).
+4. Envie para o repositório (`git push origin minha-nova-feature`).
+5. Abra um pull request no GitHub.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Licença
 
-### Making a Progressive Web App
+Distribuído sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais informações.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Contato
 
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- [Eduardo Atene Silva](https://github.com/EduardoAtene)
+  - Email: eduardoatenesilvamarinha@gmail.com 
+- [Pedro Mozany](https://github.com/PedroMozany)
+  - Email: pedro.mozanny@gmail.com
